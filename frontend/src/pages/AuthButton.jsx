@@ -4,7 +4,8 @@ const AuthButton = () => {
   // Handle Google OAuth login
   const handleAuthClick = async () => {
     try {
-      const response = await axios.get("https://telemedx.onrender.com/auth/google");
+      // const response = await axios.get("https://telemedx.onrender.com/auth/google");
+      const response = await axios.get("http://localhost:4000/auth/google");
       window.location.href = response.data.authUrl;
     } catch (error) {
       console.error("Error logging in:", error);

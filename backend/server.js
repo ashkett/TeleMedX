@@ -42,21 +42,42 @@ const port = process.env.PORT || 4000;
 connectDB();
 connectCloudinary();
 
+const allowedOrigins = [
+  "http://localhost:5173",
+  "http://localhost:5174",
+  "http://localhost:3000",
+  "http://192.168.52.64:5173",
+  "http://127.0.0.1:5000",
+  "https://backend-21a3.onrender.com",
+  "https://telemedx.netlify.app",
+  "https://telemedx.onrender.com",
+];
 
 app.use(
   cors({
-    origin: "https://telemedx.netlify.app", // Your frontend URL
-    credentials: true, // If using authentication (cookies, sessions)
+    origin: function (origin, callback) {
+      if (!origin || allowedOrigins.includes(origin)) {
+        callback(null, origin);
+      } else {
+        callback(new Error("Not allowed by CORS"));
+      }
+    },
+    credentials: true,
   })
 );
 
+// Correct the manual CORS headers
 app.use((req, res, next) => {
-  res.header("Access-Control-Allow-Origin", "https://telemedx.netlify.app");
+  const origin = req.headers.origin;
+  if (allowedOrigins.includes(origin)) {
+    res.header("Access-Control-Allow-Origin", origin);
+  }
   res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
   res.header("Access-Control-Allow-Headers", "Content-Type, Authorization");
   res.header("Access-Control-Allow-Credentials", "true");
   next();
 });
+
 
 // Middleware
 app.use(express.json());
@@ -73,7 +94,7 @@ app.use(
 const oAuth2Client = new google.auth.OAuth2(
   client_id,
   client_secret,
-  redirect_uris[6]
+  redirect_uris[3]
 );
 
 // Google Fit API Scopes
@@ -123,7 +144,8 @@ app.get("/auth/google/callback", async (req, res) => {
     };
 
     // res.redirect("http://localhost:5173/my-health"); // Redirect to React app
-    res.redirect("https://telemedx.netlify.app/my-health"); // Redirect to React app
+    // res.redirect("https://telemedx.netlify.app/my-health"); // Redirect to React app
+    res.redirect("http://localhost:5173/my-health"); // Redirect to React app
   } catch (error) {
     console.error("Error retrieving access token:", error);
     res.redirect("/error");

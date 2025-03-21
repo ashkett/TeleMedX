@@ -13,7 +13,7 @@ const StepsCount = () => {
   const [data, setData] = useState([]);
 
   useEffect(() => {
-    fetch("https://telemedx.onrender.com/fetch-steps", { credentials: "include" })
+    fetch("http://localhost:4000/fetch-steps", { credentials: "include" })
       .then((response) => response.json())
       .then((data) => {
         if (Array.isArray(data)) {

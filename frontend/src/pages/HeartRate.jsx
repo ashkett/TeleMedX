@@ -13,7 +13,7 @@ const HeartRate = () => {
   const [data, setData] = useState([]);
 
   useEffect(() => {
-    fetch("https://telemedx.onrender.com/fetch-heartrate", { credentials: "include" })
+    fetch("http://localhost:4000/fetch-heartrate", { credentials: "include" })
       .then((response) => response.json())
       .then((data) => {
         if (Array.isArray(data)) {
